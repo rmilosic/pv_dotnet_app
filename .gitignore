@@ -1,0 +1,6 @@
+*.doc
+*.docx
+*.bacpac
+bin
+.vscode
+db_backup
