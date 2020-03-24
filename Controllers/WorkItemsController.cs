@@ -16,23 +16,15 @@ namespace project_management_app.Controllers
         [AcceptVerbs("GET", "POST")]
         public IActionResult ValidateCompositeKey(int ProjectId, int EmployeeId)
         {
-            // TODO: fix this
-            // get employee team
-            // var Employee = _context.Employees.Where(e => e.Id == EmployeeId).ToList();
-            // var TeamId = _context.Employees.Include(e => e.Projects).Where(e => e.Id == EmployeeId && e.Projects.Where(p => p.Id == ProjectId));
 
-            System.Console.WriteLine("validation started");
-
-            System.Console.WriteLine($"Project param {ProjectId}");
-            System.Console.WriteLine($"Project selection {Project}");
-            
+            var employee = _context.Employees.Include(e => e.Projects).Where(e => e.Id == EmployeeId);
+           
+            var projects = employee.SelectMany(e => e.Projects).Where(p => p.Id == ProjectId).ToList();
         
-            if (Project == null)
+            if (!projects.Any())
             {
-                System.Console.WriteLine("validation failed");
                 return Json($"This employee currently doesn't cooperate on the selected project");
             }
-            System.Console.WriteLine("validation ok");
             return Json(true);
         }
 
