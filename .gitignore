@@ -4,3 +4,4 @@
 bin
 .vscode
 db_backup
+obj/Debug

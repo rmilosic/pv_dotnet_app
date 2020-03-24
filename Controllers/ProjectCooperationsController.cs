@@ -18,6 +18,9 @@ namespace project_management_app.Controllers
             _context = context;
         }
 
+
+        
+
         // GET: ProjectCooperations
         public async Task<IActionResult> Index()
         {
@@ -25,6 +28,18 @@ namespace project_management_app.Controllers
             return View(await dB_COMPANYContext.ToListAsync());
         }
 
+       [AcceptVerbs("GET", "POST")]
+        public IActionResult ValidateCompositeKey(int ProjectId, int ? TeamId)
+        {
+            
+            var ProjectCooperation = _context.ProjectCooperation.FirstOrDefault(
+                pc => pc.ProjectId == ProjectId && pc.TeamId == TeamId );
+            if (ProjectCooperation != null)
+            {
+                return Json($"This team already has assigned selected project.");
+            }
+            return Json(true);
+        }
         // GET: ProjectCooperations/Details/5
         public async Task<IActionResult> Details(long? id)
         {
@@ -48,8 +63,8 @@ namespace project_management_app.Controllers
         // GET: ProjectCooperations/Create
         public IActionResult Create()
         {
-            ViewData["ProjectId"] = new SelectList(_context.Set<Projects>(), "Id", "Id");
-            ViewData["TeamId"] = new SelectList(_context.Set<Teams>(), "Id", "Id");
+            ViewData["ProjectId"] = new SelectList(_context.Set<Projects>(), "Id", "Name");
+            ViewData["TeamId"] = new SelectList(_context.Set<Teams>(), "Id", "Name");
             return View();
         }
 
@@ -60,14 +75,17 @@ namespace project_management_app.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,ProjectId,TeamId,DateAssigned")] ProjectCooperation projectCooperation)
         {
+            
             if (ModelState.IsValid)
             {
+                
                 _context.Add(projectCooperation);
                 await _context.SaveChangesAsync();
+                
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ProjectId"] = new SelectList(_context.Set<Projects>(), "Id", "Id", projectCooperation.ProjectId);
-            ViewData["TeamId"] = new SelectList(_context.Set<Teams>(), "Id", "Id", projectCooperation.TeamId);
+            ViewData["ProjectId"] = new SelectList(_context.Set<Projects>(), "Id", "Name", projectCooperation.ProjectId);
+            ViewData["TeamId"] = new SelectList(_context.Set<Teams>(), "Id", "Name", projectCooperation.TeamId);
             return View(projectCooperation);
         }
 
@@ -84,8 +102,8 @@ namespace project_management_app.Controllers
             {
                 return NotFound();
             }
-            ViewData["ProjectId"] = new SelectList(_context.Set<Projects>(), "Id", "Id", projectCooperation.ProjectId);
-            ViewData["TeamId"] = new SelectList(_context.Set<Teams>(), "Id", "Id", projectCooperation.TeamId);
+            ViewData["ProjectId"] = new SelectList(_context.Set<Projects>(), "Id", "Name", projectCooperation.ProjectId);
+            ViewData["TeamId"] = new SelectList(_context.Set<Teams>(), "Id", "Name", projectCooperation.TeamId);
             return View(projectCooperation);
         }
 
@@ -121,8 +139,8 @@ namespace project_management_app.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ProjectId"] = new SelectList(_context.Set<Projects>(), "Id", "Id", projectCooperation.ProjectId);
-            ViewData["TeamId"] = new SelectList(_context.Set<Teams>(), "Id", "Id", projectCooperation.TeamId);
+            ViewData["ProjectId"] = new SelectList(_context.Set<Projects>(), "Id", "Name", projectCooperation.ProjectId);
+            ViewData["TeamId"] = new SelectList(_context.Set<Teams>(), "Id", "Name", projectCooperation.TeamId);
             return View(projectCooperation);
         }
 

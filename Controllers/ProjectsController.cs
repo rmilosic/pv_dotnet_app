@@ -18,6 +18,17 @@ namespace project_management_app.Controllers
             _context = context;
         }
 
+        [AcceptVerbs("GET", "POST")]
+        public IActionResult VerifyUniqueName(string name)
+        {
+            var ProjectName = _context.Projects.FirstOrDefault(p => p.Name == name);
+            if (ProjectName != null)
+            {
+                return Json($"Project name {name} is already in use.");
+            }
+            return Json(true);
+        }
+        
         // GET: Projects
         public async Task<IActionResult> Index()
         {
@@ -64,7 +75,7 @@ namespace project_management_app.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            // 
+             
             ViewData["ProjectManagerId"] = new SelectList(_context.Employees, "Id", "Email", projects.ProjectManagerId);
             return View(projects);
         }

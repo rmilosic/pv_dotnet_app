@@ -13,6 +13,29 @@ namespace project_management_app.Controllers
     {
         private readonly DB_COMPANYContext _context;
 
+        [AcceptVerbs("GET", "POST")]
+        public IActionResult ValidateCompositeKey(int ProjectId, int EmployeeId)
+        {
+            // TODO: fix this
+            // get employee team
+            // var Employee = _context.Employees.Where(e => e.Id == EmployeeId).ToList();
+            // var TeamId = _context.Employees.Include(e => e.Projects).Where(e => e.Id == EmployeeId && e.Projects.Where(p => p.Id == ProjectId));
+
+            System.Console.WriteLine("validation started");
+
+            System.Console.WriteLine($"Project param {ProjectId}");
+            System.Console.WriteLine($"Project selection {Project}");
+            
+        
+            if (Project == null)
+            {
+                System.Console.WriteLine("validation failed");
+                return Json($"This employee currently doesn't cooperate on the selected project");
+            }
+            System.Console.WriteLine("validation ok");
+            return Json(true);
+        }
+
         public WorkItemsController(DB_COMPANYContext context)
         {
             _context = context;
@@ -48,8 +71,8 @@ namespace project_management_app.Controllers
         // GET: WorkItems/Create
         public IActionResult Create()
         {
-            ViewData["EmployeeId"] = new SelectList(_context.Set<Employees>(), "Id", "Id");
-            ViewData["ProjectId"] = new SelectList(_context.Set<Projects>(), "Id", "Id");
+            ViewData["EmployeeId"] = new SelectList(_context.Set<Employees>(), "Id", "Email");
+            ViewData["ProjectId"] = new SelectList(_context.Set<Projects>(), "Id", "Name");
             return View();
         }
 
@@ -60,14 +83,15 @@ namespace project_management_app.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,Description,ProjectId,EmployeeId,DateCreated,DateStarted,DateFinished,DateDue")] WorkItems workItems)
         {
+            
             if (ModelState.IsValid)
             {
                 _context.Add(workItems);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["EmployeeId"] = new SelectList(_context.Set<Employees>(), "Id", "Id", workItems.EmployeeId);
-            ViewData["ProjectId"] = new SelectList(_context.Set<Projects>(), "Id", "Id", workItems.ProjectId);
+            ViewData["EmployeeId"] = new SelectList(_context.Set<Employees>(), "Id", "Email", workItems.EmployeeId);
+            ViewData["ProjectId"] = new SelectList(_context.Set<Projects>(), "Id", "Name", workItems.ProjectId);
             return View(workItems);
         }
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
+using Microsoft.AspNetCore.Mvc;
 
 namespace project_management_app.Models
 {
@@ -17,6 +18,7 @@ namespace project_management_app.Models
 
         [Required]
         [StringLength(100)]
+        [Remote(action: "VerifyUniqueName", controller: "Teams")]
         public string Name { get; set; }
 
         public virtual ICollection<Employees> Employees { get; set; }

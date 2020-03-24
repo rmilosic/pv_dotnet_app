@@ -26,6 +26,8 @@ namespace project_management_app
         {
             services.AddControllersWithViews();
             services.AddScoped<project_management_app.Models.DB_COMPANYContext>();
+            // services.AddDbContext<project_management_app.Models.DB_COMPANYContext>(options =>
+            // options.UseSqlite(Configuration.GetConnectionString("SQLServerConnection")));
 
         }
 

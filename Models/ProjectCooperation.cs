@@ -1,16 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel;
+using Microsoft.AspNetCore.Mvc;
 
 namespace project_management_app.Models
 {
     public partial class ProjectCooperation
     {
+        
         public long Id { get; set; }
-
         
         [DisplayName("Project ID")]
+        [Remote(action: "ValidateCompositeKey", controller: "ProjectCooperations", AdditionalFields="TeamId")]
         public long ProjectId { get; set; }
         
         [DisplayName("Team ID")]

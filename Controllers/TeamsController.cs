@@ -18,6 +18,17 @@ namespace project_management_app.Controllers
             _context = context;
         }
 
+        [AcceptVerbs("GET", "POST")]
+        public IActionResult VerifyUniqueName(string name)
+        {
+            var TeamName = _context.Teams.FirstOrDefault(t => t.Name == name);
+            if (TeamName != null)
+            {
+                return Json($"Team name {name} is already in use.");
+            }
+            return Json(true);
+        }
+
         // GET: Teams
         public async Task<IActionResult> Index()
         {
